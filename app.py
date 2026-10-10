@@ -7,7 +7,7 @@ import streamlit as st
 # ----------------------------------------------------------------------------
 # CONFIG - edit these values
 # ----------------------------------------------------------------------------
-NAME = "Suraj Shinde"
+NAME = "Suraj Baban Shinde"
 TAGLINE = "AI & ML engineer building LLM, RAG and agent applications"
 LOCATION = "Wai, Satara, Maharashtra, India"
 EMAIL = "surajshinde1208@gmail.com"
@@ -113,7 +113,7 @@ PROJECTS = [
             "Designed the workflow to check whether a tool is needed before generating the final response.",
             "Built an interactive interface to submit tasks and monitor agent responses.",
         ],
-        "link": "https://github.com/surajshinde12/Autonomous-AI-Agent",
+        "link": "",
         "wip": False,
     },
     {
@@ -139,21 +139,21 @@ CERTIFICATES = [
         "issuer": "LearnTube & CampusX",
         "detail": "Course certification covering machine learning concepts and algorithms.",
         "image": "machine_learning.png",
-        "link": "https://drive.google.com/file/d/17dd38snrLwhDEKmVcVtZernt9wz4WIA-/view?usp=drivesdk",
+        "link": "",
     },
     {
         "title": "Deep Learning",
         "issuer": "LearnTube & CampusX",
         "detail": "Course certification covering deep learning and neural networks.",
         "image": "deep_learning.png",
-        "link": "https://drive.google.com/file/d/1oMBOdAht98zJie6BUePaa7DPEoOvjpzL/view?usp=drivesdk",
+        "link": "",
     },
     {
         "title": "Generative AI",
         "issuer": "LearnTube & CampusX",
         "detail": "Course certification covering generative AI and LLM-based applications.",
         "image": "genai.png",
-        "link": "https://drive.google.com/file/d/14zfwSiAHfh-0R7Lt7savCAl8lLKxIbQ5/view?usp=drivesdk",
+        "link": "",
     },
 ]
 
@@ -161,7 +161,7 @@ EXPERIENCE = [
     {
         "title": "Event Coordinator, SAAI, RIT",
         "period": "May 2024 – May 2025",
-        "detail": "Coordinated a gaming event and helped led a state-level technical fest at RIT Sangli "
+        "detail": "Coordinated a gaming event and helped lead a state-level technical fest at RIT Sangli "
                   "with 300+ participants across gaming events.",
     },
 ]
@@ -214,22 +214,7 @@ def home():
 
     st.write("")
     st.subheader("What I work with")
-    st.markdown(pills(["Python",
-        "Machine Learning",
-        "Scikit-learn",
-        "GenAI",
-        "LLMs",
-        "RAG",
-        "LangChain",
-        "AI Agents",
-        "Embeddings",
-        "ChromaDB",
-        "Streamlit",
-        "Pandas",
-        "NumPy",
-        "Matplotlib",
-        "Seaborn",
-        "Git & GitHub"]), unsafe_allow_html=True)
+    st.markdown(pills(["Python", "LangChain", "RAG", "ChromaDB", "Groq", "Scikit-learn", "Streamlit"]), unsafe_allow_html=True)
 
 
 def about():
@@ -294,15 +279,32 @@ def projects():
             st.link_button("View code", p["link"], key=p["title"])
 
 
+def find_cert_image(name):
+    """Find the image even if the capital letters or the extension differ."""
+    exact = CERT_DIR / name
+    if exact.exists():
+        return exact
+    if CERT_DIR.exists():
+        stem = Path(name).stem.lower()
+        for f in CERT_DIR.iterdir():
+            if f.stem.lower() == stem and f.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}:
+                return f
+    return None
+
+
 @st.dialog("Certificate", width="large")
 def show_certificate(cert):
     """Pop-up that shows the certificate image."""
     st.markdown(f"**{cert['title']}**  \n{cert['issuer']}")
-    img = CERT_DIR / cert["image"]
-    if img.exists():
+    img = find_cert_image(cert["image"])
+    if img:
         st.image(str(img))
     else:
-        st.warning(f"Image not found. Add the file at assets/certificates/{cert['image']}")
+        found = sorted(f.name for f in CERT_DIR.iterdir()) if CERT_DIR.exists() else []
+        st.warning(
+            f"Could not find '{cert['image']}' in assets/certificates/. "
+            f"Files found there: {found if found else 'none (folder missing or empty)'}"
+        )
     if cert.get("link"):
         st.link_button("Verify online", cert["link"])
 
@@ -324,7 +326,7 @@ def certificates():
 def resume():
     st.title("Resume")
     if not CV_PATH.exists():
-        st.warning("View it here: "
+        st.warning("Resume file not found. View it here: "
                    "https://drive.google.com/file/d/1VZ60Qp2KFSG9ryGrlVXgA5Me5jmwotzx/view?usp=drivesdk")
         return
     data = CV_PATH.read_bytes()

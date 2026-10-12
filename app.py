@@ -138,21 +138,21 @@ CERTIFICATES = [
         "title": "Machine Learning",
         "issuer": "LearnTube & CampusX",
         "detail": "Course certification covering machine learning concepts and algorithms.",
-        "image": "machine_learning.png",
+        "image": "machine_learning.jpg",
         "link": "",
     },
     {
         "title": "Deep Learning",
         "issuer": "LearnTube & CampusX",
         "detail": "Course certification covering deep learning and neural networks.",
-        "image": "deep_learning.png",
+        "image": "deep_learning.jpg",
         "link": "",
     },
     {
         "title": "Generative AI",
         "issuer": "LearnTube & CampusX",
         "detail": "Course certification covering generative AI and LLM-based applications.",
-        "image": "genai.png",
+        "image": "genai.jpg",
         "link": "",
     },
 ]
@@ -318,8 +318,15 @@ def certificates():
             f"<div class='meta'>{c['issuer']}</div>{c['detail']}</div>",
             unsafe_allow_html=True,
         )
-        if st.button("View certificate", key=f"cert_{i}"):
-            show_certificate(c)
+        if find_cert_image(c["image"]):
+            # image available: show it in a pop-up
+            if st.button("View certificate", key=f"cert_{i}"):
+                show_certificate(c)
+        elif c.get("link"):
+            # no image, but a link (e.g. Google Drive): open it directly
+            st.link_button("View certificate", c["link"], key=f"cert_{i}")
+        else:
+            st.caption("Certificate coming soon.")
         st.write("")
 
 

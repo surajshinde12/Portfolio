@@ -113,7 +113,7 @@ PROJECTS = [
             "Designed the workflow to check whether a tool is needed before generating the final response.",
             "Built an interactive interface to submit tasks and monitor agent responses.",
         ],
-        "link": "",
+        "link": "https://github.com/surajshinde12/Autonomous-AI-Agent",
         "wip": False,
     },
     {
